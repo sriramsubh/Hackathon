@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#cbe6f7"
+    tools:context="com.example.sriramthiyagaraja.hackathon.aadharNumber.MainActivityAadharNumber">
+
+    <ImageView
+        android:id="@+id/img_finger_print"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button_next"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/ic_fingerprint"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.167" />
+
+    <TextView
+        android:id="@+id/finger_print_hint_id"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:text="@string/finger_print"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/imageView10"
+        app:layout_constraintHorizontal_bias="0.769"
+        app:layout_constraintStart_toStartOf="@+id/imageView10"
+        app:layout_constraintTop_toTopOf="@+id/imageView10"
+        app:layout_constraintVertical_bias="1.0"
+        android:layout_above="@+id/img_finger_print"
+        android:layout_alignRight="@+id/img_finger_print"
+        android:layout_alignEnd="@+id/img_finger_print" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/aadhar_amount_TextView_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+
+        android:layout_centerHorizontal="true">
+
+        <com.alimuzaffar.lib.widgets.AnimatedEditText
+            android:id="@+id/aadharAmountAnimatededitText"
+            android:layout_width="207dp"
+            android:layout_height="50dp"
+            android:layout_alignEnd="@+id/button_next"
+            android:layout_alignRight="@+id/button_next"
+            android:layout_below="@+id/aadhar_amount_textView_id"
+            android:layout_gravity="left"
+            android:layout_marginTop="13dp"
+            android:layout_weight="1"
+            android:hint="@string/amount"
+            android:maxLength="7"
+            android:inputType="number"
+            app:animateCursor="true"
+            app:animateTextClear="true"
+            app:animationType="fromRight"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="-68dp" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/aadhar_number_TextView_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:layout_below="@+id/aadhar_amount_TextView_id"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+
+        <com.alimuzaffar.lib.widgets.AnimatedEditText
+            android:id="@+id/aadharnumberAnimatededitText"
+            android:layout_width="298dp"
+            android:layout_height="40dp"
+            android:layout_alignLeft="@+id/aadhar_amount_textView_id"
+            android:layout_alignStart="@+id/aadhar_amount_textView_id"
+            android:layout_below="@+id/aadhar_amount_TextView_id"
+            android:layout_marginTop="11dp"
+            android:layout_weight="1"
+            android:hint="@string/input_aadhar"
+            android:maxLength="12"
+            android:inputType="number"
+            android:textSize="24sp"
+            app:animateCursor="true"
+            app:animateTextClear="true"
+            app:animationType="fromRight"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="-68dp" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <Button
+        android:id="@+id/button_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:onClick="aadharNumberValidator"
+        android:text="@string/submit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        tools:layout_editor_absoluteX="68dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="14dp" />
+
+
+</RelativeLayout>

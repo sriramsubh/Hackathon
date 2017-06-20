@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Merchant</string>
+    <string name="imageView4_description">this is to give sample description</string>
+    <string name="input_aadhar">Aadhar Number </string>
+    <string name="submit">SUBMIT</string>
+    <string name="amount">Amount </string>
+    <string name="finger_print">Press and Hold your finger</string>
+    <string name="enter_correct_Aadhar">enter correct Aadhar</string>
+
+
+</resources>
