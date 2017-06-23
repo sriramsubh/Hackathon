@@ -11,15 +11,15 @@
         android:id="@+id/img_finger_print"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button_next"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="33dp"
         android:background="@drawable/ic_fingerprint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
 
-        app:layout_constraintVertical_bias="0.167" />
+        app:layout_constraintVertical_bias="0.167"
+        android:layout_above="@+id/textView"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/finger_print_hint_id"
@@ -31,9 +31,9 @@
         app:layout_constraintHorizontal_bias="0.769"
 
         app:layout_constraintVertical_bias="1.0"
-        android:layout_above="@+id/img_finger_print"
 
-        android:layout_alignEnd="@+id/img_finger_print" />
+        android:layout_above="@+id/img_finger_print"
+        android:layout_centerHorizontal="true" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/aadhar_amount_TextView_id"
@@ -41,7 +41,9 @@
         android:layout_height="wrap_content"
 
 
-        android:layout_centerHorizontal="true">
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="11dp">
 
         <com.alimuzaffar.lib.widgets.AnimatedEditText
             android:id="@+id/aadharAmountAnimatededitText"
@@ -53,8 +55,8 @@
             android:layout_gravity="start"
             android:layout_marginTop="13dp"
             android:hint="@string/amount"
-            android:maxLength="7"
             android:inputType="number"
+            android:maxLength="7"
             app:animateCursor="true"
             app:animateTextClear="true"
             app:animationType="fromRight"
@@ -70,10 +72,9 @@
         android:id="@+id/aadhar_number_TextView_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="17dp"
         android:layout_below="@+id/aadhar_amount_TextView_id"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="11dp">
 
 
         <com.alimuzaffar.lib.widgets.AnimatedEditText
@@ -114,6 +115,15 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="14dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Response"
+        android:layout_above="@+id/button_next"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp" />
 
 
 </RelativeLayout>

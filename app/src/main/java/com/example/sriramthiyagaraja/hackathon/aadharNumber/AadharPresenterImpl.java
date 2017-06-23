@@ -6,13 +6,10 @@ package com.example.sriramthiyagaraja.hackathon.aadharNumber;
 
 //import com.example.sriramthiyagaraja.hackathon.aadharNumber.com.example.sriramthiyagaraja.hackathon.VerhoeffAlgorithm;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * AadharPresenterImpl implements the aadharPresenter interface
  */
-public class AadharPresenterImpl implements IPresenter.aadharPresenter {
+public class AadharPresenterImpl implements PresenterAadharNumber.aadharPresenter {
     private MainView mainView;
     public AadharPresenterImpl(MainActivityAadharNumber mainView)
     {
@@ -21,7 +18,7 @@ public class AadharPresenterImpl implements IPresenter.aadharPresenter {
 // aadhar number validation function
     @Override
     public boolean aadharNumberValidator(String number) {
-        String regexStr = "^[0-9]{12,12}$";
+        String regexStr = "^[0-9]{12,12}";
         //Pattern p = Pattern.compile(regexStr);
         //Matcher m = p.matcher(number);
 

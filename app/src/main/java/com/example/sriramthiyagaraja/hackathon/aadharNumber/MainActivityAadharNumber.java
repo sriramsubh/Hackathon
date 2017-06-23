@@ -2,7 +2,9 @@ package com.example.sriramthiyagaraja.hackathon.aadharNumber;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.KeyguardManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
@@ -22,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sriramthiyagaraja.hackathon.AuthSuccessActivity;
+import com.example.sriramthiyagaraja.hackathon.FingerPrintManager.FingerprintHandler;
 import com.example.sriramthiyagaraja.hackathon.R;
 import com.example.sriramthiyagaraja.hackathon.aadharAmount.AadharEnterAmountView;
 import com.example.sriramthiyagaraja.hackathon.aadharAmount.PresenterAadharAmountImplementation;
@@ -51,7 +55,6 @@ public class MainActivityAadharNumber extends AppCompatActivity implements MainV
     // Variable used for storing the key in the Android Keystore container
     private static final String KEY_NAME = "androidHive";
     private Cipher cipher;
-    private TextView textView;
 
     private AadharPresenterImpl aadharPresenter;
     private PresenterAadharAmountImplementation aadharPresenterImpl;
@@ -65,51 +68,9 @@ public class MainActivityAadharNumber extends AppCompatActivity implements MainV
         Button button = (Button) findViewById(R.id.button_next);
 
         button.setOnClickListener(this);
+        // fingerprint validation function to validate the fingerprint
+        fingerprintValidation();
 
-        //begining of the code copu
-        KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-        FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
-
-
-        textView = (TextView) findViewById(R.id.textView);
-
-
-        // Check whether the device has a Fingerprint sensor.
-        if(!fingerprintManager.isHardwareDetected()){
-            /**
-             * An error message will be displayed if the device does not contain the fingerprint hardware.
-             * However if you plan to implement a default authentication method,
-             * you can redirect the user to a default authentication activity from here.
-             * Example:
-             * Intent intent = new Intent(this, DefaultAuthenticationActivity.class);
-             * startActivity(intent);
-             */
-            textView.setText("Your Device does not have a Fingerprint Sensor");
-        }else {
-            // Checks whether fingerprint permission is set on manifest
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
-                textView.setText("Fingerprint authentication permission not enabled");
-            }else{
-                // Check whether at least one fingerprint is registered
-                if (!fingerprintManager.hasEnrolledFingerprints()) {
-                    textView.setText("Register at least one fingerprint in Settings");
-                }else{
-                    // Checks whether lock screen security is enabled or not
-                    if (!keyguardManager.isKeyguardSecure()) {
-                        textView.setText("Lock screen security not enabled in Settings");
-                    }else{
-                        generateKey();
-
-
-                        if (cipherInit()) {
-                            FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(cipher);
-                            FingerprintHandler helper = new FingerprintHandler(this);
-                            helper.startAuth(fingerprintManager, cryptoObject);
-                        }
-                    }
-                }
-            }
-        }
     }
 
 
@@ -182,56 +143,8 @@ public class MainActivityAadharNumber extends AppCompatActivity implements MainV
     @Override
     public void onClick(View v) {
 
-        EditText aadharNumber, aadharAmount;
-        TextInputLayout aadharAmountTextInputLayout, aadharNumberTextInputLayout;
-        ImageView initialFingerPrintImage;
-
-
-        aadharNumber = (EditText) findViewById(R.id.aadharnumberAnimatededitText);
-        aadharAmount = (EditText) findViewById(R.id.aadharAmountAnimatededitText);
-        aadharNumberTextInputLayout = (TextInputLayout) findViewById(R.id.aadhar_number_TextView_id);
-        aadharNumberTextInputLayout.setHint("aadhar number");
-        aadharAmountTextInputLayout = (TextInputLayout) findViewById(R.id.aadhar_amount_TextView_id);
-        aadharAmountTextInputLayout.setHint("amount");
-        initialFingerPrintImage = (ImageView) findViewById(R.id.img_finger_print);
-
-        boolean aadharValidatedNumber = aadharPresenter.aadharNumberValidator(aadharNumber.getText().toString());
-        boolean aadharAmountValidator = aadharPresenterImpl.aadharAmountValidator(aadharAmount.getText().toString());
-        if (aadharValidatedNumber && aadharAmountValidator) {
-            aadharAmountTextInputLayout.setError(null);
-            aadharNumberTextInputLayout.setError(null);
-            initialFingerPrintImage.setBackgroundResource(R.drawable.finger_print_success);
-            //  Intent intent = new Intent(getApplicationContext(), ActivityFingerPrint.class);
-            //startActivity(intent);
-        } else {
-            // multiple IF-else block to catch the possible error outcomes
-
-            if (!aadharAmountValidator && aadharValidatedNumber) {
-                Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
-                aadharAmount.startAnimation(shake);
-                aadharNumberTextInputLayout.setError(null);
-                aadharAmountTextInputLayout.setError("enter the correct amount");
-            } else {
-                if (aadharAmountValidator && !aadharValidatedNumber) {
-                    Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
-                    aadharNumber.startAnimation(shake);
-                    aadharAmountTextInputLayout.setError(null);
-                    aadharNumberTextInputLayout.setError("enter correct Aadhar");
-                } else {
-                    if (!aadharAmountValidator && !aadharValidatedNumber) {
-                        Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
-                        aadharNumber.startAnimation(shake);
-                        aadharAmount.startAnimation(shake);
-                        aadharAmountTextInputLayout.setError("enter correct amount");
-                        aadharNumberTextInputLayout.setError("enter correct aadhar");
-                    }
-                }
-            }
-            initialFingerPrintImage.setBackgroundResource(R.drawable.finger_print_failure);
-            // Toast.makeText(this,"cannot start the activity",Toast.LENGTH_SHORT).show();
-        }
-
-
+      if(validateAmountAndAadhar() && fingerprintValidation())
+        startActivity(new Intent(MainActivityAadharNumber.this, AuthSuccessActivity.class));
     }
 
     @Override
@@ -260,4 +173,115 @@ public class MainActivityAadharNumber extends AppCompatActivity implements MainV
     public void onBackPressed() {
         Toast.makeText(this, "back press not allowed", Toast.LENGTH_SHORT).show();
     }
+    public boolean validateAmountAndAadhar()
+    {
+        EditText aadharNumber, aadharAmount;
+        TextInputLayout aadharAmountTextInputLayout, aadharNumberTextInputLayout;
+        //ImageView initialFingerPrintImage;
+
+
+        aadharNumber = (EditText)  findViewById(R.id.aadharnumberAnimatededitText);
+        aadharAmount = (EditText) findViewById(R.id.aadharAmountAnimatededitText);
+        aadharNumberTextInputLayout = (TextInputLayout) findViewById(R.id.aadhar_number_TextView_id);
+        aadharNumberTextInputLayout.setHint("aadhar number");
+        aadharAmountTextInputLayout = (TextInputLayout) findViewById(R.id.aadhar_amount_TextView_id);
+        aadharAmountTextInputLayout.setHint("amount");
+        // initialFingerPrintImage = (ImageView) findViewById(R.id.img_finger_print);
+
+        boolean aadharValidatedNumber = aadharPresenter.aadharNumberValidator(aadharNumber.getText().toString());
+        boolean aadharAmountValidator = aadharPresenterImpl.aadharAmountValidator(aadharAmount.getText().toString());
+        if (aadharValidatedNumber && aadharAmountValidator ) {
+            aadharAmountTextInputLayout.setError(null);
+            aadharNumberTextInputLayout.setError(null);
+
+        return true;
+
+        }
+        // initialFingerPrintImage.setBackgroundResource(R.drawable.finger_print_success);
+        //  Intent intent = new Intent(getApplicationContext(), ActivityFingerPrint.class);
+        //startActivity(intent);
+        else {
+            // multiple IF-else block to catch the possible error outcomes
+
+            if (!aadharAmountValidator && aadharValidatedNumber ) {
+                Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
+                aadharAmount.startAnimation(shake);
+                aadharNumberTextInputLayout.setError(null);
+                aadharAmountTextInputLayout.setError("enter the correct amount");
+            } else {
+                if (aadharAmountValidator && !aadharValidatedNumber) {
+                    Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
+                    aadharNumber.startAnimation(shake);
+                    aadharAmountTextInputLayout.setError(null);
+                    aadharNumberTextInputLayout.setError("enter correct Aadhar");
+                } else {
+                    if (!aadharAmountValidator && !aadharValidatedNumber) {
+                        Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
+                        aadharNumber.startAnimation(shake);
+                        aadharAmount.startAnimation(shake);
+                        aadharAmountTextInputLayout.setError("enter correct amount");
+                        aadharNumberTextInputLayout.setError("enter correct aadhar");
+
+                    }
+                }
+            }
+            // initialFingerPrintImage.setBackgroundResource(R.drawable.finger_print_failure);
+            // Toast.makeText(this,"cannot start the activity",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+
+    }
+    public boolean fingerprintValidation()
+    {
+
+            //begining of the code copu
+            KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+            FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
+            TextView textView;
+
+            textView = (TextView) findViewById(R.id.textView);
+
+
+            // Check whether the device has a Fingerprint sensor.
+            if (!fingerprintManager.isHardwareDetected()) {
+                /**
+                 * An error message will be displayed if the device does not contain the fingerprint hardware.
+                 * However if you plan to implement a default authentication method,
+                 * you can redirect the user to a default authentication activity from here.
+                 * Example:
+                 * Intent intent = new Intent(this, DefaultAuthenticationActivity.class);
+                 * startActivity(intent);
+                 */
+                textView.setText("Your Device does not have a Fingerprint Sensor");
+            } else {
+                // Checks whether fingerprint permission is set on manifest
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+                    textView.setText("Fingerprint authentication permission not enabled");
+                } else {
+                    // Check whether at least one fingerprint is registered
+                    if (!fingerprintManager.hasEnrolledFingerprints()) {
+                        textView.setText("Register at least one fingerprint in Settings");
+                    } else {
+                        // Checks whether lock screen security is enabled or not
+                        if (!keyguardManager.isKeyguardSecure()) {
+                            textView.setText("Lock screen security not enabled in Settings");
+                        } else {
+                            generateKey();
+
+
+                            if (cipherInit()) {
+                                FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(cipher);
+                                FingerprintHandler helper = new FingerprintHandler(this);
+                                helper.startAuth(fingerprintManager, cryptoObject);
+                                return true;
+                            }
+                        }
+                    }
+                }
+
+            }
+        return false;
+    }
+
 }
