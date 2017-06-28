@@ -11,4 +11,5 @@ package com.example.sriramthiyagaraja.hackathon.aadharAmount;
 public interface IPresenterAadharAmount {
 //    This method validates the amount
     public boolean aadharAmountValidator(String amount);
+
 }

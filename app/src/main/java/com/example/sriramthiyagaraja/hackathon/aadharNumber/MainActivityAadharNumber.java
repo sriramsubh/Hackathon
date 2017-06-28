@@ -220,7 +220,7 @@ public class MainActivityAadharNumber extends AppCompatActivity implements MainV
         else {
             // multiple IF-else block to catch the possible error outcomes
 
-            if (!aadharAmountValidator && aadharValidatedNumber ) {
+            if ((!aadharAmountValidator )&& aadharValidatedNumber ) {
                 Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
                 aadharAmount.startAnimation(shake);
                 aadharNumberTextInputLayout.setError(null);
@@ -231,7 +231,7 @@ public class MainActivityAadharNumber extends AppCompatActivity implements MainV
                     aadharNumber.startAnimation(shake);
                     aadharAmountTextInputLayout.setError(null);
                     aadharNumberTextInputLayout.setError("enter correct Aadhar");
-                } else {
+                }/* else {
                     if (!aadharAmountValidator && !aadharValidatedNumber) {
                         Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
                         aadharNumber.startAnimation(shake);
@@ -240,7 +240,7 @@ public class MainActivityAadharNumber extends AppCompatActivity implements MainV
                         aadharNumberTextInputLayout.setError("enter correct aadhar");
 
                     }
-                }
+                }*/
             }
             // initialFingerPrintImage.setBackgroundResource(R.drawable.finger_print_failure);
             // Toast.makeText(this,"cannot start the activity",Toast.LENGTH_SHORT).show();
