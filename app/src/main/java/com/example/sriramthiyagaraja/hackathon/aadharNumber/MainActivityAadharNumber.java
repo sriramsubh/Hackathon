@@ -56,6 +56,7 @@ public class MainActivityAadharNumber extends AppCompatActivity implements MainV
     private static final String KEY_NAME = "androidHive";
     private Cipher cipher;
 
+    boolean amountNumberSuccess = false;
     private AadharPresenterImpl aadharPresenter;
     private PresenterAadharAmountImplementation aadharPresenterImpl;
 
@@ -68,8 +69,10 @@ public class MainActivityAadharNumber extends AppCompatActivity implements MainV
         Button button = (Button) findViewById(R.id.button_next);
 
         button.setOnClickListener(this);
-        // fingerprint validation function to validate the fingerprint
         fingerprintValidation();
+
+        // fingerprint validation function to validate the fingerprint
+        //fingerprintValidation();
 
     }
 
@@ -140,12 +143,24 @@ public class MainActivityAadharNumber extends AppCompatActivity implements MainV
      * This function performs the validation check with the presenter when the submit button is clicked
      * @param v
      */
+
     @Override
     public void onClick(View v) {
 
-      if(validateAmountAndAadhar() && fingerprintValidation())
-        startActivity(new Intent(MainActivityAadharNumber.this, AuthSuccessActivity.class));
-    }
+    validateAmountAndAadhar();
+        if(amountNumberSuccess && FingerprintHandler.fingerprintAuth )
+     {
+         //Toast.makeText(this, "fingerprint enter", Toast.LENGTH_SHORT).show();
+         //fingerprintValidation();
+         //if(fingerprintResult)
+          //
+
+         startActivity(new Intent(this,AuthSuccessActivity.class));
+         }
+         else{
+         Toast.makeText(this, "fingerprint error ", Toast.LENGTH_SHORT).show();
+     }
+     }
 
     @Override
     public void showValidationError() {
@@ -191,8 +206,10 @@ public class MainActivityAadharNumber extends AppCompatActivity implements MainV
         boolean aadharValidatedNumber = aadharPresenter.aadharNumberValidator(aadharNumber.getText().toString());
         boolean aadharAmountValidator = aadharPresenterImpl.aadharAmountValidator(aadharAmount.getText().toString());
         if (aadharValidatedNumber && aadharAmountValidator ) {
+            amountNumberSuccess= true;
             aadharAmountTextInputLayout.setError(null);
             aadharNumberTextInputLayout.setError(null);
+
 
         return true;
 
@@ -232,8 +249,9 @@ public class MainActivityAadharNumber extends AppCompatActivity implements MainV
 
 
     }
-    public boolean fingerprintValidation()
+    public void fingerprintValidation()
     {
+
 
             //begining of the code copu
             KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
@@ -254,6 +272,8 @@ public class MainActivityAadharNumber extends AppCompatActivity implements MainV
                  * startActivity(intent);
                  */
                 textView.setText("Your Device does not have a Fingerprint Sensor");
+
+
             } else {
                 // Checks whether fingerprint permission is set on manifest
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
@@ -271,17 +291,21 @@ public class MainActivityAadharNumber extends AppCompatActivity implements MainV
 
 
                             if (cipherInit()) {
-                                FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(cipher);
-                                FingerprintHandler helper = new FingerprintHandler(this);
-                                helper.startAuth(fingerprintManager, cryptoObject);
-                                return true;
+
+                                    FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(cipher);
+                                    FingerprintHandler helper = new FingerprintHandler(this);
+                                    helper.startAuth(fingerprintManager, cryptoObject);
+
+
+
+
                             }
                         }
                     }
                 }
 
             }
-        return false;
+
     }
 
 }
